@@ -34,3 +34,39 @@
     backrefs: yes
   notify:
     - update-grub
+
+- name: set compressor (insert)
+  lineinfile:
+    path: '{{ zswap_grubfile }}'
+    regexp: '^GRUB_CMDLINE_LINUX_DEFAULT="((?!.*?zswap\.compressor=[A-z]+).*)"'
+    line: 'GRUB_CMDLINE_LINUX_DEFAULT="\1 zswap.compressor={{ zswap_compressor }}"'
+    backrefs: yes
+  notify:
+    - update-grub
+
+- name: set compressor (update)
+  lineinfile:
+    path: '{{ zswap_grubfile }}'
+    regexp: '^GRUB_CMDLINE_LINUX_DEFAULT="(.*?)zswap\.compressor=[A-z]+(.*?)"'
+    line: 'GRUB_CMDLINE_LINUX_DEFAULT="\1zswap.compressor={{ zswap_compressor }}\2"'
+    backrefs: yes
+  notify:
+    - update-grub
+    
+- name: set zpool (insert)
+  lineinfile:
+    path: '{{ zswap_grubfile }}'
+    regexp: '^GRUB_CMDLINE_LINUX_DEFAULT="((?!.*?zswap\.zpool=[A-z]+).*)"'
+    line: 'GRUB_CMDLINE_LINUX_DEFAULT="\1 zswap.zpool={{ zswap_zpool }}"'
+    backrefs: yes
+  notify:
+    - update-grub
+
+- name: set zpool (update)
+  lineinfile:
+    path: '{{ zswap_grubfile }}'
+    regexp: '^GRUB_CMDLINE_LINUX_DEFAULT="(.*?)zswap\.zpool=[A-z]+(.*?)"'
+    line: 'GRUB_CMDLINE_LINUX_DEFAULT="\1zswap.zpool={{ zswap_zpool }}\2"'
+    backrefs: yes
+  notify:
+    - update-grub
